@@ -40,12 +40,12 @@ This script is useful for quickly cleaning up directories while preserving impor
 
 
 \
+\
 
 
 
 
-
-\**mail: Slurm Job Monitor**
+**mail: Slurm Job Monitor**
 Purpose:
 A Python script to monitor Slurm jobs and send email notifications upon completion.
 
