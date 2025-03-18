@@ -1,0 +1,168 @@
+#!/usr/bin/env python3
+
+# Author: Richard Lopez Corbalan
+# GitHub: github.com/richardloopez
+# Citation: If you use this code, please cite Lopez-Corbalan, R.
+
+import os
+import sys
+import smtplib
+import subprocess
+import time
+from datetime import datetime
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import argparse
+import signal
+
+class SlurmJobMonitor:
+    def __init__(self, job_id, job_title, nice_phrase, email_to):
+        self.job_id = job_id
+        self.job_title = job_title
+        self.nice_phrase = nice_phrase
+        self.email_to = email_to.split(',') if isinstance(email_to, str) else email_to
+        self.start_time = datetime.now()
+
+    def send_email(self, subject, body):
+        from_email = os.environ.get('SLURM_NOTIFY_EMAIL', 'your_default_email@example.com')
+        password = os.environ.get('SLURM_NOTIFY_PASSWORD', 'your_default_password')
+
+        msg = MIMEMultipart()
+        msg['From'] = from_email
+        msg['To'] = ", ".join(self.email_to)
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body, 'plain'))
+
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(from_email, password)
+                server.sendmail(from_email, self.email_to, msg.as_string())
+            print("Email sent successfully.")
+        except Exception as e:
+            print(f"Error sending email: {e}")
+
+    def check_job_status(self):
+        try:
+            result = subprocess.run(['squeue', '-j', self.job_id], capture_output=True, text=True)
+            if "Invalid job id specified" in result.stderr:
+                print(f"Error: Job {self.job_id} not found. Please check the job ID.")
+                sys.exit(1)
+            return result.returncode, result.stdout, result.stderr
+        except Exception as e:
+            return 1, "", str(e)
+
+    def monitor_job(self):
+        job_found = False
+        print(f"Job monitoring started at: {self.start_time}")
+
+        while True:
+            return_code, output, error = self.check_job_status()
+
+            if return_code == 0:
+                if " R " in output or " PD " in output:
+                    print(f"Job {self.job_id} is {'running' if ' R ' in output else 'pending'}.")
+                    job_found = True
+                    time.sleep(300)  # Check every 5 minutes
+                else:
+                    if job_found:
+                        self.job_completed()
+                        break
+                    else:
+                        print(f"Error: Job {self.job_id} not found in the queue. It may have completed already or never existed.")
+                        sys.exit(1)
+            else:
+                print(f"Error querying job status: {error}")
+                sys.exit(1)
+
+    def job_completed(self):
+        end_time = datetime.now()
+        duration = end_time - self.start_time
+
+        message = (f"Job {self.job_id} has completed.\n"
+                   f"Job Title: {self.job_title}\n"
+                   f"Start Time: {self.start_time}\n"
+                   f"End Time: {end_time}\n"
+                   f"Duration: {duration}\n"
+                   f"Note: {self.nice_phrase}")
+
+        self.send_email(
+            f"Job Completed: {self.job_title}",
+            message
+        )
+
+def show_usage():
+    print("Usage: mail <job_id> \"<job_title>\" \"<nice_phrase>\" \"<email1>,<email2>,...\"")
+    print()
+    print("Monitor a Slurm job and send an email notification upon completion.")
+    print()
+    print("Arguments:")
+    print("  <job_id>        Slurm job ID to monitor")
+    print("  <job_title>     Title of the job (use quotes if it contains spaces)")
+    print("  <nice_phrase>   A nice phrase to include in the completion email (use quotes)")
+    print("  <email>         Recipient email address(es), comma-separated if multiple")
+    print()
+    print("Example:")
+    print("  mail 12345 \"My Important Job\" \"Great work!\" \"user@example.com,boss@example.com\"")
+
+def daemonize():
+    try:
+        pid = os.fork()
+        if pid > 0:
+            # Exit the parent process
+            print(f"Job monitor started in background. PID: {pid}")
+            sys.exit(0)
+    except OSError as e:
+        print(f"Fork failed: {e.errno} ({e.strerror})")
+        sys.exit(1)
+    
+    # Decouple from parent environment
+    os.chdir("/")
+    os.setsid()
+    os.umask(0)
+    
+    # Perform second fork
+    try:
+        pid = os.fork()
+        if pid > 0:
+            # Exit from second parent
+            sys.exit(0)
+    except OSError as e:
+        print(f"Second fork failed: {e.errno} ({e.strerror})")
+        sys.exit(1)
+    
+    # Redirect standard file descriptors
+    sys.stdout.flush()
+    sys.stderr.flush()
+    si = open(os.devnull, 'r')
+    so = open(os.devnull, 'a+')
+    se = open(os.devnull, 'a+')
+    os.dup2(si.fileno(), sys.stdin.fileno())
+    os.dup2(so.fileno(), sys.stdout.fileno())
+    os.dup2(se.fileno(), sys.stderr.fileno())
+
+def main():
+    if len(sys.argv) == 2 and sys.argv[1] in ['-help', '--help']:
+        show_usage()
+        sys.exit(0)
+
+    if len(sys.argv) != 5:
+        print("Error: Incorrect number of arguments.")
+        show_usage()
+        sys.exit(1)
+
+    job_id, job_title, nice_phrase, email_to = sys.argv[1:]
+
+    # Daemonize the process
+    daemonize()
+
+    # Create a file to store the PID
+    with open(f'/tmp/slurm_monitor_{job_id}.pid', 'w') as f:
+        f.write(str(os.getpid()))
+
+    monitor = SlurmJobMonitor(job_id, job_title, nice_phrase, email_to)
+    monitor.monitor_job()
+
+if __name__ == "__main__":
+    main()
+
