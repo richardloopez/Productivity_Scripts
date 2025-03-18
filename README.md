@@ -7,6 +7,7 @@ A collection of Python scripts for managing files and documents, enhancing produ
 
 
 **rmex: Remove Except**
+
 Purpose:
 rmex is a Python script designed to simplify file and directory management by allowing users to delete all files or directories in a given path, except for specified exceptions.
 
