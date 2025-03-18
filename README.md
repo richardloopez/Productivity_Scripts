@@ -41,7 +41,7 @@ This script is useful for quickly cleaning up directories while preserving impor
 
 \
 \
-\
+
 
 
 
