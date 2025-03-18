@@ -40,3 +40,35 @@ This script is useful for quickly cleaning up directories while preserving impor
 
 
 
+
+**mail: Slurm Job Monitor**
+Purpose:
+A Python script to monitor Slurm jobs and send email notifications upon completion.
+
+Functionality:
+
+Job Monitoring: Continuously checks the status of a specified Slurm job.
+
+Email Notifications: Sends an email when the job completes, including job details.
+
+Background Execution: Runs in the background, allowing uninterrupted terminal use.
+
+Usage:
+
+mail <job_id> "<job_title>" "<nice_phrase>" "<email1>,<email2>,..."
+
+Configuration:
+
+Email sender credentials are expected to be set as environment variables (SLURM_NOTIFY_EMAIL and SLURM_NOTIFY_PASSWORD) in your .bashrc file for secure configuration.
+
+Features:
+
+Configurable email sender and recipients.
+
+Automatic background execution.
+
+Supports multiple recipient emails.
+
+
+
+
