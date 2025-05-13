@@ -31,10 +31,20 @@ Preview of changes before deletion.
 
 Manual confirmation required.
 
-Supports self-deletion if not excluded.
+    Here you have some examples:
 
-Example Usage:
-rmex -rf -rd folder1 file1.txt
+    1. rmex("-rd alonso.txt") -> destroy all documents [except alonso.txt] (folders remain untouched)
+    2. rmex("-rd -rf schumacher.txt") -> destroy all documents [except schumacher.txt] and all folders
+    3. rmex("-rf hamilton.txt") -> destroy all folders (documents remain untouched). Yeah, it makes no sense adding "hamilton.txt" because no "rd" was added...
+
+    4. rmex("-rf renault)-> destroy all folders [except renault] (documents remain untouched)
+    5. rmex("-rd -rf ferrari") -> destroy all documents and all folders [except ferrari.txt]
+    6. rmex("-rd mercedes") -> destroy all documents (folders remain untouched). Yeah, it makes no sense adding "mercedes" because no "rf" was added...
+
+    7. rmex("-rd -rf alonso.txt renault") -> MAXIMUN POWER!! destroy all documents [except alonso.txt] and all folders [except renault]
+
+
+
 This script is useful for quickly cleaning up directories while preserving important files or folders.
 
 
@@ -45,7 +55,7 @@ This script is useful for quickly cleaning up directories while preserving impor
 
 
 
-**mail: Slurm Job Monitor**
+**mail: Slurm Job Monitor (not working now)** 
 Purpose:
 A Python script to monitor Slurm jobs and send email notifications upon completion.
 
