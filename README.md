@@ -47,6 +47,11 @@ Manual confirmation required.
 
 This script is useful for quickly cleaning up directories while preserving important files or folders.
 
+*To make this script work in all the environment, is highly recommemded to follow next steps:
+    1. Go to home (∼) and open the .bashrc 
+    2. add an alias with the absolute path. i.e: alias rmex="python3 /home/richard/scripts_interesantes/rmex/rmex.py"
+    3. Now you can use the script by typing "rmex -rd -rf ..."
+    4. Enjoy :)
 
 
 \
