@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-#Code for deleting selected directories and files (only if selected)
+# Author: Richard Lopez Corbalan
+# GitHub: github.com/richardloopez
+# Citation: If you use this code, please cite Lopez-Corbalan, R
+
 import os
 import shutil
 import sys
