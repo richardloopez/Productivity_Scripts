@@ -173,6 +173,7 @@ This Python script monitors a YouTube playlist (favorites) and automatically dow
 | `ytmp3_config.json`       | Configuration file: YouTube playlist URL, folders, settings. |
 | `run_monitor.bat`         | Windows batch file to launch the Python script easily.  |
 | `A_downloaded.txt`        | History file storing downloaded video IDs (auto-generated). |
+| `A_failed.txt`        | History file storing failed to download video IDs after 10 attempts (auto-generated). |
 | `ffmpeg.exe`, `ffplay.exe`, `ffprobe.exe` | FFmpeg binaries required by `yt-dlp` for audio processing. | Note: This files are not included. They need to be placed in the same folders as all the others, and can be downloaded from "https://ffmpeg.org/download.html" or "https://www.gyan.dev/ffmpeg/builds/"
 
 ---
