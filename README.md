@@ -139,3 +139,80 @@ If you want me to help with anything else, just ask!
 
 
 
+
+
+
+
+
+
+**YT_MP3_DOWNLOADER**
+
+
+# YouTube Favorites Audio Downloader
+
+This Python script monitors a YouTube playlist (favorites) and automatically downloads the audio of newly added videos as MP3 files. It saves downloaded video IDs in a history file to avoid duplicates and names the files with a session prefix and incremental numbers.
+
+---
+
+## Features
+
+- Monitors a YouTube playlist URL continuously, checking every configured interval (in minutes).
+- Downloads audio in MP3 format with configurable quality (default 320 kbps).
+- Keeps track of downloaded videos in a history file to avoid repeated downloads.
+- Names files with a session/group identifier plus an incremental number and video title.
+- Configuration separated in a JSON file for easy customization without editing code.
+- Easy to run via a Windows batch script (`.bat`) and can be started with a desktop shortcut.
+
+---
+
+## Contents
+
+| File                     | Description                                             |
+|--------------------------|---------------------------------------------------------|
+| `yt_favorites_monitor.py` | Main Python script that performs monitoring and downloads audio. |
+| `ytmp3_config.json`       | Configuration file: YouTube playlist URL, folders, settings. |
+| `run_monitor.bat`         | Windows batch file to launch the Python script easily.  |
+| `A_downloaded.txt`        | History file storing downloaded video IDs (auto-generated). |
+| `ffmpeg.exe`, `ffplay.exe`, `ffprobe.exe` | FFmpeg binaries required by `yt-dlp` for audio processing. |
+
+---
+
+## Setup Instructions
+
+1. **Python 3.6+ Required**  
+   Ensure you have Python 3.6 or later installed on your system. The script uses modern Python features like f-strings.
+
+2. **Install Dependencies**  
+   Open a command prompt and run:  
+   ```bash
+   py -3 -m pip install yt-dlp
+3. **Configuration**
+Edit ytmp3_config.json to suit your preferences:
+
+Replace the "url" value with your YouTube playlist URL.
+
+Adjust "destination_folder" to your desired download path.
+
+Set the path for "ffmpeg_location" where your FFmpeg binaries are located.
+
+Modify "interval_minutes" to change how often (in minutes) the script checks for new videos.
+
+Change "session_group_id" to identify different sessions or groups.
+
+4. **Batch File**
+Edit run_monitor.bat to point to the folder where your Python script is located. Example:
+
+Copiar
+Editar
+@echo off
+cd /d "E:\T\Programming\Jupyter\Codes\YT-MP3"
+py -3 yt_favorites_monitor.py
+pause
+
+5. **Run the Script**
+Double-click run_monitor.bat to start monitoring and downloading new audio files automatically.
+
+6. **Optional: Create Desktop Shortcut**
+Right-click run_monitor.bat → Send to → Desktop (create shortcut) for quick access.
+
+
