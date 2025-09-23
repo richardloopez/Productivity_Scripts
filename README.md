@@ -217,3 +217,25 @@ Double-click run_monitor.bat to start monitoring and downloading new audio files
 Right-click run_monitor.bat → Send to → Desktop (create shortcut) for quick access.
 
 
+
+
+
+**WhisperBatchTranscriber**
+
+This Python script provides a simple yet flexible interface for running OpenAI's Whisper speech recognition model. It supports both single-file transcription and batch transcription of entire directories, saving results directly into text files while also optionally printing them to the console. The script is designed so that you only need to edit the input paths and model selection, making it easy to adapt for different use cases.
+
+Key features:
+
+Load any Whisper model size (tiny, base, small, medium, large).
+
+Transcribe a single audio file.
+
+Automatically process multiple audio files from a directory.
+
+Save transcriptions in UTF-8 encoded text files with matching filenames.
+
+Minimal adjustments needed—only update the input paths and model option.
+
+
+
+
