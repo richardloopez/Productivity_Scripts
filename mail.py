@@ -130,7 +130,7 @@ def send_notification(config, job_id, job_title, nice_phrase, recipients):
         f"ID: {job_id}\n"
         f"Title: {job_title}\n"
         f"Enjoy: {nice_phrase}\n"
-        f"\n¡Happy Computing! :)"
+        f"\nHappy Computing! :)"
     )
     msg = MIMEText(body)
     msg["Subject"] = f"[SLURM] Job {job_id} - {job_title}"
@@ -178,4 +178,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
